@@ -2,24 +2,22 @@ package com.example.todo.tasks
 
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 import com.example.todo.R
 import com.example.todo.data.Task
+import com.google.android.material.snackbar.Snackbar
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_tasks.*
-import kotlinx.android.synthetic.main.task_item.view.*
 
 class TasksFragment : Fragment() {
 
-    lateinit var tasksPresenter: TasksPresenter
+    lateinit var presenter: TasksPresenter
     lateinit var viewManager: RecyclerView.LayoutManager
     lateinit var viewAdapter: RecyclerView.Adapter<*>
     private var tasksList = ArrayList<Task>()
@@ -47,7 +45,7 @@ class TasksFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        tasksPresenter.loadTasks()
+        presenter.loadTasks()
     }
 
     override fun onDetach() {
@@ -59,5 +57,12 @@ class TasksFragment : Fragment() {
         tasksList.clear()
         tasksList.addAll(tasks)
         viewAdapter.notifyDataSetChanged()
+    }
+
+    fun showCantLoadSnackBar() {
+        val clickListener = { _: View -> presenter.loadTasks() }
+        Snackbar.make(tasks_view, R.string.cannot_load_tasks, Snackbar.LENGTH_INDEFINITE)
+            .setAction(R.string.retry, clickListener)
+            .show()
     }
 }

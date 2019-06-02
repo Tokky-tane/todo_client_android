@@ -7,14 +7,15 @@ import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
+import retrofit2.http.*
 
 interface TaskService {
     @GET("users/{user_id}/tasks")
     fun getTasks(@Path("user_id") userId: Int): Single<List<Task>>
+
+    @Headers("Content_type: application/json")
+    @POST("users/{user_id}/tasks")
+    fun postTask(@Path("user_id") userId: Int, @Body task: Task): Single<Unit>
 }
 
 class RetrofitService {

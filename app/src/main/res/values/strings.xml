@@ -1,8 +1,7 @@
 <resources>
     <string name="app_name">todo</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="cannot_load_tasks">Can\'t load tasks</string>
+    <string name="cannot_add_task">Can\'t add new Task\nPlease check internet connection</string>
     <string name="retry">RETRY</string>
+    <string name="title">Title</string>
 </resources>

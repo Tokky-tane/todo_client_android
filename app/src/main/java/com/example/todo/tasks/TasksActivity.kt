@@ -6,17 +6,19 @@ import android.os.Bundle
 import com.example.todo.R
 
 class TasksActivity : AppCompatActivity() {
+    lateinit var tasksFragment:TasksFragment
+    lateinit var tasksPresenter: TasksPresenter
 
     @SuppressLint("ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tasks)
 
-        val tasksFragment = TasksFragment()
+        tasksFragment = TasksFragment()
         supportFragmentManager.beginTransaction()
             .add(R.id.tasks_container, tasksFragment)
             .commit()
 
-        val tasksPresenter = TasksPresenter(tasksFragment)
+        tasksPresenter = TasksPresenter(tasksFragment)
     }
 }

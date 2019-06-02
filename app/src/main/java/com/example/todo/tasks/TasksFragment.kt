@@ -1,6 +1,7 @@
 package com.example.todo.tasks
 
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 import com.example.todo.R
+import com.example.todo.addtask.AddTaskActivity
 import com.example.todo.data.Task
 import com.google.android.material.snackbar.Snackbar
 import io.reactivex.disposables.CompositeDisposable
@@ -33,6 +35,11 @@ class TasksFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        add_button.setOnClickListener {
+            val intent = Intent(context, AddTaskActivity::class.java)
+            startActivity(intent)
+        }
 
         viewManager = LinearLayoutManager(context)
         viewAdapter = TasksAdapter(tasksList)

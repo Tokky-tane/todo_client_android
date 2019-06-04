@@ -22,7 +22,6 @@ class TasksPresenter(private val view: TasksFragment) {
                     view.setTasks(tasks)
                 },
                 onError = {
-                    Log.i("yo",it.toString())
                     view.showCantLoadSnackBar()
                 }
             )

@@ -65,8 +65,6 @@ class TasksFragment : Fragment() {
         tasksList.clear()
         tasksList.addAll(tasks)
         viewAdapter.notifyDataSetChanged()
-        Log.d("d",tasks.toString()
-        )
     }
 
     fun showCantLoadSnackBar() {

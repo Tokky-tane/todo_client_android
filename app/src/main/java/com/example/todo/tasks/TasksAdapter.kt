@@ -7,8 +7,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.todo.R
 import com.example.todo.data.Task
 import kotlinx.android.synthetic.main.task_item.view.*
+import java.text.SimpleDateFormat
+import java.util.*
 
-class TasksAdapter(private val  tasks: List<Task>) :
+class TasksAdapter(private val tasks: List<Task>) :
     RecyclerView.Adapter<TasksAdapter.TaskViewHolder>() {
 
     class TaskViewHolder(val taskView: ConstraintLayout) : RecyclerView.ViewHolder(taskView)
@@ -23,7 +25,25 @@ class TasksAdapter(private val  tasks: List<Task>) :
     }
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
-        holder.taskView.title_view.text = tasks[position].title
+        val task = tasks[position]
+
+        holder.taskView.title_view.text = task.title
+
+        if (task.deadline == null) return
+            holder.taskView.deadline_view.text = formatDeadline(task.deadline)
+    }
+
+    private fun formatDeadline(deadline: Date): String {
+
+        val todayDate = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
+        val deadlineDate = Calendar.getInstance().apply { time = deadline }.get(Calendar.DAY_OF_MONTH)
+
+        val df = if (deadlineDate == todayDate)
+            SimpleDateFormat("HH:MM", Locale.JAPAN)
+        else
+            SimpleDateFormat("MM/dd\nHH:mm", Locale.JAPAN)
+
+        return df.format(deadline)
     }
 
     override fun getItemCount() = tasks.size

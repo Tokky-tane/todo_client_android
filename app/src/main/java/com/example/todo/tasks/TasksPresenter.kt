@@ -1,5 +1,6 @@
 package com.example.todo.tasks
 
+import android.util.Log
 import com.example.todo.data.RetrofitService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
@@ -21,6 +22,7 @@ class TasksPresenter(private val view: TasksFragment) {
                     view.setTasks(tasks)
                 },
                 onError = {
+                    Log.i("yo",it.toString())
                     view.showCantLoadSnackBar()
                 }
             )

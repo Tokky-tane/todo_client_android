@@ -70,12 +70,11 @@ class AddTaskFragment : Fragment() {
     }
 
     fun showCantAddSnackBar() {
-        val clickListener = { _: View -> presenter.addTask(Task(null, 1, task_title.text.toString())) }
-        Snackbar.make(
+        val snackbar = Snackbar.make(
             add_task_view, R.string.cannot_add_task, Snackbar.LENGTH_INDEFINITE
         )
-            .setAction(R.string.retry, clickListener)
-            .show()
+        snackbar.setAction("OK") { snackbar.dismiss() }
+        snackbar.show()
     }
 }
 

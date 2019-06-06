@@ -2,7 +2,6 @@ package com.example.todo.tasks
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todo.R
 import com.example.todo.data.Task
@@ -30,21 +29,21 @@ class TasksAdapter(private val tasks: List<Task>) :
 
         holder.taskView.title_view.text = task.title
 
-        if (task.deadline == null) return
-            holder.taskView.deadline_view.text = formatDeadline(task.deadline)
+        if (task.dueDate == null) return
+            holder.taskView.due_date_view.text = formatDueDate(task.dueDate)
     }
 
-    private fun formatDeadline(deadline: Date): String {
+    private fun formatDueDate(dueDate: Date): String {
 
         val todayDate = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
-        val deadlineDate = Calendar.getInstance().apply { time = deadline }.get(Calendar.DAY_OF_MONTH)
+        val dueDateDayOfMonth = Calendar.getInstance().apply { time = dueDate }.get(Calendar.DAY_OF_MONTH)
 
-        val df = if (deadlineDate == todayDate)
+        val df = if (dueDateDayOfMonth == todayDate)
             SimpleDateFormat("HH:MM", Locale.JAPAN)
         else
             SimpleDateFormat("MM/dd\nHH:mm", Locale.JAPAN)
 
-        return df.format(deadline)
+        return df.format(dueDate)
     }
 
     override fun getItemCount() = tasks.size

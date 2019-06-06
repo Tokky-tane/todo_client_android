@@ -6,6 +6,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todo.R
 import com.example.todo.data.Task
+import com.google.android.material.card.MaterialCardView
 import kotlinx.android.synthetic.main.task_item.view.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -13,13 +14,13 @@ import java.util.*
 class TasksAdapter(private val tasks: List<Task>) :
     RecyclerView.Adapter<TasksAdapter.TaskViewHolder>() {
 
-    class TaskViewHolder(val taskView: ConstraintLayout) : RecyclerView.ViewHolder(taskView)
+    class TaskViewHolder(val taskView: MaterialCardView) : RecyclerView.ViewHolder(taskView)
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
 
         val taskView = LayoutInflater.from(parent.context)
-            .inflate(R.layout.task_item, parent, false) as ConstraintLayout
+            .inflate(R.layout.task_item, parent, false) as MaterialCardView
 
         return TaskViewHolder(taskView)
     }

@@ -20,6 +20,7 @@ interface TaskService {
 
 class RetrofitService {
     private val gson = GsonBuilder()
+        .serializeNulls()
         .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
         .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
         .create()

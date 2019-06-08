@@ -2,19 +2,17 @@ package com.example.todo.addtask
 
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-
 import com.example.todo.R
 import com.example.todo.data.Task
 import com.google.android.material.snackbar.Snackbar
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_add_task.*
-import kotlinx.android.synthetic.main.fragment_tasks.*
+import java.util.*
 
 class AddTaskFragment : Fragment() {
     lateinit var presenter: AddTaskPresenter
@@ -42,10 +40,14 @@ class AddTaskFragment : Fragment() {
                 task_title.error = null
             }
         }
+
         add_task_button.setOnClickListener {
             // TODO : set current userId
             presenter.addTask(Task(null, 1, task_title.text.toString()))
         }
+
+        val spinnerItems = initSpinnerItems()
+        spinner.adapter = DueDateSpinnerAdapter(context!!, spinnerItems)
     }
 
     private fun setAddTaskButtonState(isError: Boolean) {
@@ -63,7 +65,6 @@ class AddTaskFragment : Fragment() {
         compositeDisposable.clear()
     }
 
-
     fun backView() {
         val activity = context as AddTaskActivity
         activity.finish()
@@ -75,6 +76,26 @@ class AddTaskFragment : Fragment() {
         )
         snackbar.setAction("OK") { snackbar.dismiss() }
         snackbar.show()
+    }
+
+    private fun initSpinnerItems(): List<DueDateSpinnerItem> {
+        val today = Date()
+        val calender = Calendar.getInstance()
+
+        calender.time = today
+        calender.add(Calendar.DATE, 1)
+        val tomorrow = calender.time
+
+        calender.time = today
+        calender.add(Calendar.DATE, 7)
+        val nextWeek = calender.time
+
+        return listOf(
+            DueDateSpinnerItem("today", today),
+            DueDateSpinnerItem("tomorrow", tomorrow),
+            DueDateSpinnerItem("Next Week", nextWeek),
+            DueDateSpinnerItem("Custom", src = R.drawable.ic_chevron_right_black_18dp)
+        )
     }
 }
 

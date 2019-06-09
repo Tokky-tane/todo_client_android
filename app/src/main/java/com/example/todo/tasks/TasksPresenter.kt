@@ -1,12 +1,11 @@
 package com.example.todo.tasks
 
-import android.util.Log
 import com.example.todo.data.RetrofitService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 
-class TasksPresenter(private val view: TasksFragment) {
+class TasksPresenter(private val view: TasksActivity) {
     private val taskService = RetrofitService().getTaskService()
 
     init {

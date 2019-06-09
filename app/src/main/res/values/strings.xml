@@ -4,4 +4,5 @@
     <string name="cannot_add_task">Can\'t add new Task\nPlease check internet connection</string>
     <string name="retry">RETRY</string>
     <string name="title">Title</string>
+    <string name="due_date">Due Date</string>
 </resources>

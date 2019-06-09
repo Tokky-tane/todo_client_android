@@ -22,7 +22,7 @@ class AddTaskActivity : AppCompatActivity(), AddTaskContract.View {
 
         task_title.addTextChangedListener { text ->
             val title = text.toString()
-            mPresenter.validateTitle(title)
+            mPresenter.updateTitle(title)
         }
         add_task_button.setOnClickListener {
             // TODO : set current userId
@@ -41,10 +41,6 @@ class AddTaskActivity : AppCompatActivity(), AddTaskContract.View {
     override fun onResume() {
         super.onResume()
         mPresenter.subscribe()
-    }
-
-    override fun setPresenter(presenter: AddTaskContract.Presenter) {
-        mPresenter = presenter
     }
 
     override fun activateAddTask() {

@@ -11,16 +11,12 @@ class AddTaskPresenter(private val view: AddTaskContract.View) : AddTaskContract
     private val taskService = RetrofitService().getTaskService()
     private val compositeDisposable = CompositeDisposable()
 
-    init {
-        view.setPresenter(this)
-    }
-
     override fun subscribe() {
 
     }
 
     override fun unSubscribe() {
-
+        compositeDisposable.clear()
     }
 
     override fun addNewTask(task: Task) {
@@ -40,7 +36,7 @@ class AddTaskPresenter(private val view: AddTaskContract.View) : AddTaskContract
         compositeDisposable.add(disposable)
     }
 
-    override fun validateTitle(title: String) {
+    override fun updateTitle(title: String) {
         if (title.isBlank()) {
             view.deactivateAddTask()
         } else {

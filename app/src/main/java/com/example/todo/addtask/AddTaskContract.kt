@@ -1,11 +1,10 @@
 package com.example.todo.addtask
 
 import com.example.todo.BasePresenter
-import com.example.todo.BaseView
 import com.example.todo.data.Task
 
 interface AddTaskContract {
-    interface View : BaseView<Presenter> {
+    interface View {
         fun showCantAddTask()
         fun activateAddTask()
         fun deactivateAddTask()
@@ -14,6 +13,6 @@ interface AddTaskContract {
 
     interface Presenter : BasePresenter {
         fun addNewTask(task: Task)
-        fun validateTitle(title: String)
+        fun updateTitle(title: String)
     }
 }

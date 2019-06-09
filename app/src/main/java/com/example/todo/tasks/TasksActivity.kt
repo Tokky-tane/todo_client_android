@@ -11,28 +11,25 @@ import com.example.todo.R
 import com.example.todo.addtask.AddTaskActivity
 import com.example.todo.data.Task
 import com.google.android.material.snackbar.Snackbar
-import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_tasks.*
 
-class TasksActivity : AppCompatActivity() {
-    lateinit var presenter: TasksPresenter
-    lateinit var viewManager: RecyclerView.LayoutManager
-    lateinit var viewAdapter: RecyclerView.Adapter<*>
+class TasksActivity : AppCompatActivity(), TasksContract.View {
+    lateinit var mPresenter: TasksContract.Presenter
+    private lateinit var viewAdapter: RecyclerView.Adapter<*>
     private var tasksList = ArrayList<Task>()
-    val compositeDisposable = CompositeDisposable()
 
     @SuppressLint("ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tasks)
 
-        presenter = TasksPresenter(this)
+        mPresenter = TasksPresenter(this)
+
         add_button.setOnClickListener {
-            val intent = Intent(this, AddTaskActivity::class.java)
-            startActivity(intent)
+            mPresenter.addNewTask()
         }
 
-        viewManager = LinearLayoutManager(this)
+        val viewManager = LinearLayoutManager(this)
         viewAdapter = TasksAdapter(tasksList)
 
         tasks_view.apply {
@@ -43,24 +40,29 @@ class TasksActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        presenter.loadTasks()
+        mPresenter.subscribe()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        compositeDisposable.clear()
+    override fun onPause() {
+        super.onPause()
+        mPresenter.unSubscribe()
     }
 
-    fun setTasks(tasks: List<Task>) {
+    override fun setTasks(tasks: List<Task>) {
         tasksList.clear()
         tasksList.addAll(tasks)
         viewAdapter.notifyDataSetChanged()
     }
 
-    fun showCantLoadSnackBar() {
-        val clickListener = { _: View -> presenter.loadTasks() }
+    override fun showCantLoadTasks() {
+        val clickListener = { _: View -> mPresenter.loadTasks() }
         Snackbar.make(tasks_view, R.string.cannot_load_tasks, Snackbar.LENGTH_INDEFINITE)
             .setAction(R.string.retry, clickListener)
             .show()
+    }
+
+    override fun showAddNewTask() {
+        val intent = Intent(this, AddTaskActivity::class.java)
+        startActivity(intent)
     }
 }

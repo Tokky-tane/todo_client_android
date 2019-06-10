@@ -36,7 +36,7 @@
                 android:inputType="text"/>
     </com.google.android.material.textfield.TextInputLayout>
 
-    <androidx.appcompat.widget.AppCompatSpinner
+    <com.example.todo.addtask.DueDateSpinner
             android:id="@+id/spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

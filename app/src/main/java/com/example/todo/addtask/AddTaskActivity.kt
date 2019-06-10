@@ -1,6 +1,8 @@
 package com.example.todo.addtask
 
 import android.os.Bundle
+import android.view.View
+import android.widget.AdapterView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import com.example.todo.R
@@ -12,6 +14,8 @@ import java.util.*
 class AddTaskActivity : AppCompatActivity(), AddTaskContract.View {
 
     lateinit var mPresenter: AddTaskContract.Presenter
+    private lateinit var dueDateSpinnerItems: Array<DueDateSpinnerItem>
+    private lateinit var dueDateSpinnerAdapter: DueDateSpinnerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,11 +30,23 @@ class AddTaskActivity : AppCompatActivity(), AddTaskContract.View {
         }
         add_task_button.setOnClickListener {
             // TODO : set current userId
-            mPresenter.addNewTask(Task(null, 1, task_title.text.toString()))
+            val title = task_title.text.toString()
+            val dueDate = (spinner.selectedItem as DueDateSpinnerItem).date
+            mPresenter.addNewTask(Task(null, 1, title, dueDate))
         }
 
-        val spinnerItems = initSpinnerItems()
-        spinner.adapter = DueDateSpinnerAdapter(this, spinnerItems)
+        dueDateSpinnerItems = initSpinnerItems()
+        dueDateSpinnerAdapter = DueDateSpinnerAdapter(this, dueDateSpinnerItems)
+        spinner.adapter = dueDateSpinnerAdapter
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                if (position == 3)
+                    showDueDatePicker()
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+        }
     }
 
     override fun onPause() {
@@ -65,7 +81,7 @@ class AddTaskActivity : AppCompatActivity(), AddTaskContract.View {
         snackbar.show()
     }
 
-    private fun initSpinnerItems(): List<DueDateSpinnerItem> {
+    private fun initSpinnerItems(): Array<DueDateSpinnerItem> {
         val today = Date()
         val calender = Calendar.getInstance()
 
@@ -77,11 +93,23 @@ class AddTaskActivity : AppCompatActivity(), AddTaskContract.View {
         calender.add(Calendar.DATE, 7)
         val nextWeek = calender.time
 
-        return listOf(
+        return arrayOf(
             DueDateSpinnerItem("today", today),
             DueDateSpinnerItem("tomorrow", tomorrow),
             DueDateSpinnerItem("Next Week", nextWeek),
             DueDateSpinnerItem("Custom", src = R.drawable.ic_chevron_right_black_18dp)
         )
+    }
+
+    fun showDueDatePicker() {
+        val pickerFragment = DueDatePickerFragment()
+
+        pickerFragment.mPresenter = mPresenter
+        pickerFragment.show(this.supportFragmentManager, "timepicker")
+    }
+
+    override fun setCustomDate(date: Date) {
+        dueDateSpinnerItems[3].date = date
+        dueDateSpinnerAdapter.notifyDataSetChanged()
     }
 }

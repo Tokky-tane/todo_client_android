@@ -6,6 +6,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
+import java.util.*
 
 class AddTaskPresenter(private val view: AddTaskContract.View) : AddTaskContract.Presenter {
     private val taskService = RetrofitService().getTaskService()
@@ -42,5 +43,9 @@ class AddTaskPresenter(private val view: AddTaskContract.View) : AddTaskContract
         } else {
             view.activateAddTask()
         }
+    }
+
+    override fun updateCustomDate(date: Date) {
+        view.setCustomDate(date)
     }
 }

@@ -36,7 +36,7 @@ class TasksAdapter(
     }
 
     fun deleteItem(position: Int) {
-        presnter.deleteTask(tasks[position].id!!)
+        presnter.deleteTask(tasks[position])
         tasks.removeAt(position)
         notifyItemRemoved(position)
     }

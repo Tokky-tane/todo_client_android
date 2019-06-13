@@ -37,7 +37,6 @@ class TasksActivity : AppCompatActivity(), TasksContract.View {
             layoutManager = LinearLayoutManager(this@TasksActivity)
         }
         ItemTouchHelper(SwipeToDeleteCallback(viewAdapter as TasksAdapter)).attachToRecyclerView(tasks_view)
-
     }
 
     override fun onResume() {
@@ -60,6 +59,16 @@ class TasksActivity : AppCompatActivity(), TasksContract.View {
         val clickListener = { _: View -> mPresenter.loadTasks() }
         Snackbar.make(tasks_view, R.string.cannot_load_tasks, Snackbar.LENGTH_INDEFINITE)
             .setAction(R.string.retry, clickListener)
+            .show()
+    }
+
+    override fun showDeletedTask(title: String) {
+        Snackbar.make(tasks_view, R.string.deleted_task, Snackbar.LENGTH_SHORT)
+            .show()
+    }
+
+    override fun showCantDeleteTask() {
+        Snackbar.make(tasks_view, R.string.cannot_delete_Task, Snackbar.LENGTH_LONG)
             .show()
     }
 

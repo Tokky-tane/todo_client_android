@@ -5,4 +5,6 @@
     <string name="retry">RETRY</string>
     <string name="title">Title</string>
     <string name="due_date">Due Date</string>
+    <string name="deleted_task">Deleted Task</string>
+    <string name="cannot_delete_Task">Can\'t delete task</string>
 </resources>

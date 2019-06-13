@@ -10,11 +10,13 @@ import kotlinx.android.synthetic.main.task_item.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-class TasksAdapter(private val tasks: List<Task>) :
+class TasksAdapter(
+    private val tasks: MutableList<Task>,
+    private val presnter: TasksContract.Presenter
+) :
     RecyclerView.Adapter<TasksAdapter.TaskViewHolder>() {
 
     class TaskViewHolder(val taskView: MaterialCardView) : RecyclerView.ViewHolder(taskView)
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
 
@@ -30,7 +32,13 @@ class TasksAdapter(private val tasks: List<Task>) :
         holder.taskView.title_view.text = task.title
 
         if (task.dueDate == null) return
-            holder.taskView.due_date_view.text = formatDueDate(task.dueDate)
+        holder.taskView.due_date_view.text = formatDueDate(task.dueDate)
+    }
+
+    fun deleteItem(position: Int) {
+        presnter.deleteTask(tasks[position].id!!)
+        tasks.removeAt(position)
+        notifyItemRemoved(position)
     }
 
     private fun formatDueDate(dueDate: Date): String {

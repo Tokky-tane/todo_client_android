@@ -3,7 +3,6 @@ package com.example.todo.data
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder
 import io.reactivex.Single
-import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -16,6 +15,9 @@ interface TaskService {
     @Headers("Content_type: application/json")
     @POST("users/{user_id}/tasks")
     fun postTask(@Path("user_id") userId: Int, @Body task: Task): Single<Unit>
+
+    @DELETE("users/{user_id}/tasks/{task_id}")
+    fun deleteTask(@Path("user_id") userId: Int, @Path("task_id") taskId: Int): Single<Unit>
 }
 
 class RetrofitService {

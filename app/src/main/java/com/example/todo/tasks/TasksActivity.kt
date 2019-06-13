@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todo.R
@@ -29,13 +30,14 @@ class TasksActivity : AppCompatActivity(), TasksContract.View {
             mPresenter.addNewTask()
         }
 
-        val viewManager = LinearLayoutManager(this)
-        viewAdapter = TasksAdapter(tasksList)
+        viewAdapter = TasksAdapter(tasksList, mPresenter)
 
         tasks_view.apply {
             adapter = viewAdapter
-            layoutManager = viewManager
+            layoutManager = LinearLayoutManager(this@TasksActivity)
         }
+        ItemTouchHelper(SwipeToDeleteCallback(viewAdapter as TasksAdapter)).attachToRecyclerView(tasks_view)
+
     }
 
     override fun onResume() {

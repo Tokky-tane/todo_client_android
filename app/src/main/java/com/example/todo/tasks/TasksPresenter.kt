@@ -1,5 +1,6 @@
 package com.example.todo.tasks
 
+import android.util.Log
 import com.example.todo.data.RetrofitService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -37,5 +38,16 @@ class TasksPresenter(private val view: TasksContract.View) : TasksContract.Prese
 
     override fun addNewTask() {
         view.showAddNewTask()
+    }
+
+    override fun deleteTask(id: Int) {
+        val disposable = taskService.deleteTask(1, id)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy {
+                Log.d("d", "delete")
+            }
+
+        compositeDisposable.add(disposable)
     }
 }

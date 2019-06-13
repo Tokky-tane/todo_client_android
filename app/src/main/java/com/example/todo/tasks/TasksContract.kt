@@ -13,5 +13,6 @@ interface TasksContract {
     interface Presenter : BasePresenter {
         fun loadTasks()
         fun addNewTask()
+        fun deleteTask(id: Int)
     }
 }

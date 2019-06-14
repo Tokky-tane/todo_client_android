@@ -82,10 +82,17 @@ class AddTaskActivity : AppCompatActivity(), AddTaskContract.View {
     }
 
     private fun initSpinnerItems(): Array<DueDateSpinnerItem> {
-        val today = Date()
+        var today = Date()
         val calender = Calendar.getInstance()
-
         calender.time = today
+
+        calender.set(Calendar.HOUR_OF_DAY, 0)
+        calender.set(Calendar.MINUTE, 0)
+        calender.set(Calendar.SECOND, 0)
+        calender.set(Calendar.MILLISECOND, 0)
+
+        today = calender.time
+
         calender.add(Calendar.DATE, 1)
         val tomorrow = calender.time
 

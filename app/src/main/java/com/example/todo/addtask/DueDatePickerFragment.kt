@@ -22,7 +22,8 @@ class DueDatePickerFragment : DialogFragment(), DatePickerDialog.OnDateSetListen
 
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
         val c = Calendar.getInstance()
-        c.set(year, month, dayOfMonth)
+        c.set(year, month, dayOfMonth, 0, 0, 0)
+        c.set(Calendar.MILLISECOND, 0)
         mPresenter.updateCustomDate(c.time)
     }
 }

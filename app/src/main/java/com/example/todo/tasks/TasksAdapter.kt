@@ -12,7 +12,7 @@ import java.util.*
 
 class TasksAdapter(
     private val tasks: MutableList<Task>,
-    private val presnter: TasksContract.Presenter
+    private val presenter: TasksContract.Presenter
 ) :
     RecyclerView.Adapter<TasksAdapter.TaskViewHolder>() {
 
@@ -36,20 +36,14 @@ class TasksAdapter(
     }
 
     fun deleteItem(position: Int) {
-        presnter.deleteTask(tasks[position])
+        presenter.deleteTask(tasks[position])
         tasks.removeAt(position)
         notifyItemRemoved(position)
     }
 
     private fun formatDueDate(dueDate: Date): String {
 
-        val todayDate = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
-        val dueDateDayOfMonth = Calendar.getInstance().apply { time = dueDate }.get(Calendar.DAY_OF_MONTH)
-
-        val df = if (dueDateDayOfMonth == todayDate)
-            SimpleDateFormat("HH:MM", Locale.JAPAN)
-        else
-            SimpleDateFormat("MM/dd\nHH:mm", Locale.JAPAN)
+        val df = SimpleDateFormat("MM/dd", Locale.JAPAN)
 
         return df.format(dueDate)
     }

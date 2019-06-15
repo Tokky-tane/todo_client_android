@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.activity_tasks.*
 class TasksActivity : AppCompatActivity(), TasksContract.View {
     lateinit var mPresenter: TasksContract.Presenter
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
-    private var tasksList = ArrayList<Task>()
+    private var tasksList = mutableListOf<Task>()
 
     @SuppressLint("ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,10 +26,12 @@ class TasksActivity : AppCompatActivity(), TasksContract.View {
 
         mPresenter = TasksPresenter(this)
 
-        add_button.setOnClickListener {
-            mPresenter.addNewTask()
-        }
+        add_button.setOnClickListener { mPresenter.addNewTask() }
 
+        initTasksView()
+    }
+
+    private fun initTasksView() {
         viewAdapter = TasksAdapter(tasksList, mPresenter)
 
         tasks_view.apply {

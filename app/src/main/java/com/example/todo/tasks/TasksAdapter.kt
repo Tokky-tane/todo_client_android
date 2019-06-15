@@ -35,6 +35,8 @@ class TasksAdapter(
         holder.taskView.due_date_view.text = formatDueDate(task.dueDate)
     }
 
+    override fun getItemCount() = tasks.size
+
     fun deleteItem(position: Int) {
         presenter.deleteTask(tasks[position])
         tasks.removeAt(position)
@@ -42,11 +44,8 @@ class TasksAdapter(
     }
 
     private fun formatDueDate(dueDate: Date): String {
-
         val df = SimpleDateFormat("MM/dd", Locale.JAPAN)
 
         return df.format(dueDate)
     }
-
-    override fun getItemCount() = tasks.size
 }

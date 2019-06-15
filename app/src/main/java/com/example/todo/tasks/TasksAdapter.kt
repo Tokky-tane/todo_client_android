@@ -38,7 +38,7 @@ class TasksAdapter(
     override fun getItemCount() = tasks.size
 
     fun deleteItem(position: Int) {
-        presenter.deleteTask(tasks[position])
+        presenter.deleteTask(tasks[position].id!!)
         tasks.removeAt(position)
         notifyItemRemoved(position)
     }

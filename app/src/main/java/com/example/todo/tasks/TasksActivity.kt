@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.activity_tasks.*
 
 class TasksActivity : AppCompatActivity(), TasksContract.View {
     lateinit var mPresenter: TasksContract.Presenter
-    private lateinit var viewAdapter: RecyclerView.Adapter<*>
+    private lateinit var tasksAdapter: RecyclerView.Adapter<*>
     private var tasksList = mutableListOf<Task>()
 
     @SuppressLint("ResourceType")
@@ -32,13 +32,13 @@ class TasksActivity : AppCompatActivity(), TasksContract.View {
     }
 
     private fun initTasksView() {
-        viewAdapter = TasksAdapter(tasksList, mPresenter)
+        tasksAdapter = TasksAdapter(tasksList, mPresenter)
 
         tasks_view.apply {
-            adapter = viewAdapter
+            adapter = tasksAdapter
             layoutManager = LinearLayoutManager(this@TasksActivity)
         }
-        ItemTouchHelper(SwipeToDeleteCallback(viewAdapter as TasksAdapter)).attachToRecyclerView(tasks_view)
+        ItemTouchHelper(SwipeToDeleteCallback(tasksAdapter as TasksAdapter)).attachToRecyclerView(tasks_view)
     }
 
     override fun onResume() {
@@ -52,9 +52,7 @@ class TasksActivity : AppCompatActivity(), TasksContract.View {
     }
 
     override fun setTasks(tasks: List<Task>) {
-        tasksList.clear()
-        tasksList.addAll(tasks)
-        viewAdapter.notifyDataSetChanged()
+        tasksAdapter.notifyDataSetChanged()
     }
 
     override fun showCantLoadTasks() {
@@ -64,7 +62,7 @@ class TasksActivity : AppCompatActivity(), TasksContract.View {
             .show()
     }
 
-    override fun showDeletedTask(title: String) {
+    override fun showDeletedTask() {
         Snackbar.make(tasks_view, R.string.deleted_task, Snackbar.LENGTH_SHORT)
             .show()
     }

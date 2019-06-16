@@ -1,51 +1,99 @@
 package com.example.todo.tasks
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todo.R
 import com.example.todo.data.Task
-import com.google.android.material.card.MaterialCardView
 import kotlinx.android.synthetic.main.task_item.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
 class TasksAdapter(
-    private val tasks: MutableList<Task>,
+    private val items: MutableList<TasksRow>,
     private val presenter: TasksContract.Presenter
 ) :
     RecyclerView.Adapter<TasksAdapter.TaskViewHolder>() {
 
-    class TaskViewHolder(val taskView: MaterialCardView) : RecyclerView.ViewHolder(taskView)
+    enum class ViewType(val value: Int) { HEADER(0), CONTENT(1) }
+
+    class TaskViewHolder(val taskView: View) : RecyclerView.ViewHolder(taskView)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
 
-        val taskView = LayoutInflater.from(parent.context)
-            .inflate(R.layout.task_item, parent, false) as MaterialCardView
+        val itemView = when (viewType) {
+            ViewType.CONTENT.value -> {
+                LayoutInflater.from(parent.context).inflate(R.layout.task_item, parent, false)
+            }
+            ViewType.HEADER.value -> {
+                LayoutInflater.from(parent.context).inflate(android.R.layout.simple_list_item_1, parent, false)
+            }
+            else ->
+                throw RuntimeException()
+        }
 
-        return TaskViewHolder(taskView)
+        return TaskViewHolder(itemView)
     }
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
-        val task = tasks[position]
-
-        holder.taskView.title_view.text = task.title
-
-        if (task.dueDate == null) return
-        holder.taskView.due_date_view.text = formatDueDate(task.dueDate)
+        val content = items[position].content
+        when (getItemViewType(position)) {
+            ViewType.CONTENT.value -> {
+                holder.taskView.title_view.text = content
+            }
+            ViewType.HEADER.value -> {
+                (holder.taskView as TextView).text = content
+            }
+        }
     }
 
-    override fun getItemCount() = tasks.size
+    override fun getItemCount() = items.size
+    override fun getItemViewType(position: Int) = items[position].viewType.value
 
     fun deleteItem(position: Int) {
-        presenter.deleteTask(tasks[position].id!!)
-        tasks.removeAt(position)
+        if (items[position].viewType != ViewType.CONTENT) return
+
+        presenter.deleteTask(items[position].id!!)
+        items.removeAt(position)
         notifyItemRemoved(position)
     }
+}
 
-    private fun formatDueDate(dueDate: Date): String {
-        val df = SimpleDateFormat("MM/dd", Locale.JAPAN)
+interface TasksRow {
+    val viewType: TasksAdapter.ViewType
+    val id: Int?
+    val content: String
+}
 
-        return df.format(dueDate)
+class TasksHeader(date: Date) : TasksRow {
+    private var mContent: String
+
+    init {
+        val sdf = SimpleDateFormat("MM/dd E", Locale.JAPAN)
+        mContent = sdf.format(date)
     }
+
+    override val viewType: TasksAdapter.ViewType
+        get() = TasksAdapter.ViewType.HEADER
+
+    override val id: Int?
+        get() = null
+
+    override val content: String
+        get() = mContent
+
+}
+
+class TasksItem(private val task: Task) : TasksRow {
+
+    override val viewType: TasksAdapter.ViewType
+        get() = TasksAdapter.ViewType.CONTENT
+
+    override val id: Int?
+        get() = task.id
+
+    override val content: String
+        get() = task.title
 }

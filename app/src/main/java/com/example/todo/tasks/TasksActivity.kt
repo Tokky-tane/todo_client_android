@@ -13,11 +13,12 @@ import com.example.todo.addtask.AddTaskActivity
 import com.example.todo.data.Task
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_tasks.*
+import java.util.*
 
 class TasksActivity : AppCompatActivity(), TasksContract.View {
     lateinit var mPresenter: TasksContract.Presenter
     private lateinit var tasksAdapter: RecyclerView.Adapter<*>
-    private var tasksList = mutableListOf<Task>()
+    private var tasks = mutableListOf<TasksRow>()
 
     @SuppressLint("ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,7 +33,8 @@ class TasksActivity : AppCompatActivity(), TasksContract.View {
     }
 
     private fun initTasksView() {
-        tasksAdapter = TasksAdapter(tasksList, mPresenter)
+        tasks.add(0, TasksHeader(Date(2L)))
+        tasksAdapter = TasksAdapter(tasks, mPresenter)
 
         tasks_view.apply {
             adapter = tasksAdapter
@@ -51,7 +53,10 @@ class TasksActivity : AppCompatActivity(), TasksContract.View {
         mPresenter.unSubscribe()
     }
 
-    override fun setTasks(tasks: List<Task>) {
+    override fun setTasks(newTasks: List<Task>) {
+        tasks.clear()
+        tasks.addAll(newTasks.map { TasksItem(it) })
+        tasks.add(0, TasksHeader(Date(2L)))
         tasksAdapter.notifyDataSetChanged()
     }
 

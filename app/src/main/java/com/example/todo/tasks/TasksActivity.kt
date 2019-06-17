@@ -13,7 +13,6 @@ import com.example.todo.addtask.AddTaskActivity
 import com.example.todo.data.Task
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_tasks.*
-import java.util.*
 
 class TasksActivity : AppCompatActivity(), TasksContract.View {
     lateinit var mPresenter: TasksContract.Presenter
@@ -33,7 +32,6 @@ class TasksActivity : AppCompatActivity(), TasksContract.View {
     }
 
     private fun initTasksView() {
-        tasks.add(0, TasksHeader(Date(2L)))
         tasksAdapter = TasksAdapter(tasks, mPresenter)
 
         tasks_view.apply {
@@ -55,9 +53,20 @@ class TasksActivity : AppCompatActivity(), TasksContract.View {
 
     override fun setTasks(newTasks: List<Task>) {
         tasks.clear()
-        tasks.addAll(newTasks.map { TasksItem(it) })
-        tasks.add(0, TasksHeader(Date(2L)))
+        tasks.addAll(generateTasksRow(newTasks))
         tasksAdapter.notifyDataSetChanged()
+    }
+
+    private fun generateTasksRow(tasks: List<Task>): MutableList<TasksRow> {
+        val dueDateList = tasks.map { it.dueDate }.distinct()
+        val rowList = mutableListOf<TasksRow>()
+        dueDateList.forEach { dueDate ->
+            rowList.add(TasksHeader(dueDate!!))
+            rowList.addAll(
+                tasks.filter { it.dueDate == dueDate }.map { TasksItem(it) }
+            )
+        }
+        return rowList
     }
 
     override fun showCantLoadTasks() {

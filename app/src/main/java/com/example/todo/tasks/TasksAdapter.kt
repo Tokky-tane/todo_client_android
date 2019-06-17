@@ -3,11 +3,11 @@ package com.example.todo.tasks
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todo.R
 import com.example.todo.data.Task
 import kotlinx.android.synthetic.main.task_item.view.*
+import kotlinx.android.synthetic.main.tasks_header.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -28,7 +28,7 @@ class TasksAdapter(
                 LayoutInflater.from(parent.context).inflate(R.layout.task_item, parent, false)
             }
             ViewType.HEADER.value -> {
-                LayoutInflater.from(parent.context).inflate(android.R.layout.simple_list_item_1, parent, false)
+                LayoutInflater.from(parent.context).inflate(R.layout.tasks_header, parent, false)
             }
             else ->
                 throw RuntimeException()
@@ -44,7 +44,7 @@ class TasksAdapter(
                 holder.taskView.title_view.text = content
             }
             ViewType.HEADER.value -> {
-                (holder.taskView as TextView).text = content
+                holder.taskView.text.text = content
             }
         }
     }

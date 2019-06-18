@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.todo.R
 import com.example.todo.addtask.AddTaskActivity
 import com.example.todo.data.Task
+import com.example.todo.tasks.TasksAdapter.ViewType
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_tasks.*
 
@@ -76,7 +77,21 @@ class TasksActivity : AppCompatActivity(), TasksContract.View {
             .show()
     }
 
-    override fun showDeletedTask() {
+    override fun showDeletedTask(taskId: Int) {
+        val deletedIndex = tasks.indexOfFirst { it.id == taskId }
+
+        val hasNoItemInHeader = tasks.size == deletedIndex + 1 ||
+                (tasks[deletedIndex + 1].viewType == ViewType.HEADER && tasks[deletedIndex - 1].viewType == ViewType.HEADER)
+
+        if (hasNoItemInHeader) {
+            tasks.removeAt(deletedIndex)
+            tasks.removeAt(deletedIndex - 1)
+            tasksAdapter.notifyItemRangeRemoved(deletedIndex - 1, 2)
+        } else {
+            tasks.removeAt(deletedIndex)
+            tasksAdapter.notifyItemRemoved(deletedIndex)
+        }
+
         Snackbar.make(tasks_view, R.string.deleted_task, Snackbar.LENGTH_SHORT)
             .show()
     }

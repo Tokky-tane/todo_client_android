@@ -56,8 +56,6 @@ class TasksAdapter(
         if (items[position].viewType != ViewType.CONTENT) return
 
         presenter.deleteTask(items[position].id!!)
-        items.removeAt(position)
-        notifyItemRemoved(position)
     }
 }
 

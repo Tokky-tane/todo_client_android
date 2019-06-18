@@ -8,13 +8,13 @@ interface TasksContract {
         fun setTasks(newTasks: List<Task>)
         fun showCantLoadTasks()
         fun showAddNewTask()
-        fun showDeletedTask()
+        fun showDeletedTask(taskId: Int)
         fun showCantDeleteTask()
     }
 
     interface Presenter : BasePresenter {
         fun loadTasks()
         fun addNewTask()
-        fun deleteTask(tasksId: Int)
+        fun deleteTask(taskId: Int)
     }
 }

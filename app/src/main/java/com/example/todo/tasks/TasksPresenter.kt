@@ -39,13 +39,13 @@ class TasksPresenter(private val view: TasksContract.View) : TasksContract.Prese
         view.showAddNewTask()
     }
 
-    override fun deleteTask(tasksId: Int) {
-        val disposable = taskService.deleteTask(1, tasksId)
+    override fun deleteTask(taskId: Int) {
+        val disposable = taskService.deleteTask(1, taskId)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy(
                 onSuccess = {
-                    view.showDeletedTask()
+                    view.showDeletedTask(taskId)
                 },
                 onError = {
                     view.showCantDeleteTask()

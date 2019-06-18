@@ -10,16 +10,18 @@ class DueDateSpinner : AppCompatSpinner {
     constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(context, attrs, defStyle)
 
     override fun setSelection(position: Int, animate: Boolean) {
+        val sameSelected = position == selectedItemPosition
         super.setSelection(position, animate)
-        if (position == selectedItemPosition) {
-            onItemSelectedListener?.onItemSelected(this, selectedView, position, position.toLong())
+        if (sameSelected) {
+            onItemSelectedListener?.onItemSelected(this, selectedView, position, selectedItemId)
         }
     }
 
     override fun setSelection(position: Int) {
+        val sameSelected = position == selectedItemPosition
         super.setSelection(position)
-        if (position == selectedItemPosition) {
-            onItemSelectedListener?.onItemSelected(this, selectedView, position, position.toLong())
+        if (sameSelected) {
+            onItemSelectedListener?.onItemSelected(this, selectedView, position, selectedItemId)
         }
     }
 }

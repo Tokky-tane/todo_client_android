@@ -59,12 +59,13 @@ class TasksActivity : AppCompatActivity(), TasksContract.View {
     }
 
     private fun generateTasksRow(tasks: List<Task>): MutableList<TasksRow> {
-        val dueDateList = tasks.map { it.dueDate }.distinct()
+        val t = tasks.sortedWith(compareBy { task -> task.dueDate })
+        val dueDateList = t.map { it.dueDate }.distinct()
         val rowList = mutableListOf<TasksRow>()
         dueDateList.forEach { dueDate ->
             rowList.add(TasksHeader(dueDate!!))
             rowList.addAll(
-                tasks.filter { it.dueDate == dueDate }.map { TasksItem(it) }
+                t.filter { it.dueDate == dueDate }.map { TasksItem(it) }
             )
         }
         return rowList

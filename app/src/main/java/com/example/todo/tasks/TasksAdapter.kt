@@ -52,6 +52,12 @@ class TasksAdapter(
     override fun getItemCount() = items.size
     override fun getItemViewType(position: Int) = items[position].viewType.value
 
+    fun swapItem(fromPosition: Int, toPosition: Int) {
+        val tmp = items[fromPosition]
+        items[fromPosition] = items[toPosition]
+        items[toPosition] = tmp
+    }
+
     fun deleteItem(position: Int) {
         if (items[position].viewType != ViewType.CONTENT) return
 

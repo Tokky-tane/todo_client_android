@@ -63,7 +63,7 @@ class TasksActivity : AppCompatActivity(), TasksContract.View {
         val dueDateList = t.map { it.dueDate }.distinct()
         val rowList = mutableListOf<TasksRow>()
         dueDateList.forEach { dueDate ->
-            rowList.add(TasksHeader(dueDate!!))
+            rowList.add(TasksHeader(dueDate))
             rowList.addAll(
                 t.filter { it.dueDate == dueDate }.map { TasksItem(it) }
             )

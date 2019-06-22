@@ -4,8 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import androidx.annotation.DrawableRes
+import android.widget.BaseAdapter
 import androidx.core.view.isVisible
 import com.example.todo.R
 import kotlinx.android.synthetic.main.due_date_spinner_item.view.*
@@ -13,7 +12,9 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class DueDateSpinnerAdapter(context: Context, private val dueDateItems: Array<DueDateSpinnerItem>) :
-    ArrayAdapter<DueDateSpinnerItem>(context, R.layout.due_date_spinner_item, dueDateItems) {
+    BaseAdapter() {
+
+    enum class ViewType { DATE, CUSTOM }
 
     private val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
@@ -22,15 +23,17 @@ class DueDateSpinnerAdapter(context: Context, private val dueDateItems: Array<Du
         val item = dueDateItems[position]
 
         view.title.text = item.title
-        view.date.isVisible = item.title != "Custom"
+        view.date.text = item.dateString
 
-        if (item.date != null)
-            view.date.text = formatDate(item.date!!)
+        if (item.viewType == ViewType.CUSTOM) {
+            view.imageView.setImageResource(R.drawable.ic_chevron_right_black_18dp)
 
-        if (item.src != null)
-            view.imageView.setImageResource(item.src)
-        else
-            view.imageView.setImageDrawable(null)
+            view.date.isVisible = false
+            view.imageView.isVisible = true
+        } else {
+            view.date.isVisible = true
+            view.imageView.isVisible = false
+        }
 
         return view
     }
@@ -41,18 +44,32 @@ class DueDateSpinnerAdapter(context: Context, private val dueDateItems: Array<Du
         val item = dueDateItems[position]
 
         view.title.text = item.title
-        if (item.date != null)
-            view.date.text = formatDate(item.date!!)
+        view.date.text = item.dateString
 
         view.imageView.setImageResource(R.drawable.ic_arrow_drop_down_black_18dp)
         return view
     }
 
-    private fun formatDate(date: Date): String {
-        val df = SimpleDateFormat("MM/dd E", Locale.JAPAN)
+    override fun getCount() = dueDateItems.size
 
-        return df.format(date)
-    }
+    override fun getItem(position: Int) = dueDateItems[position]
+
+    override fun getItemId(position: Int) = position.toLong()
 }
 
-data class DueDateSpinnerItem(val title: String, var date: Date? = null, @DrawableRes val src: Int? = null)
+abstract class DueDateSpinnerItem {
+    abstract val viewType: DueDateSpinnerAdapter.ViewType
+    abstract val title: String
+    abstract var date: Date
+    var dateString: String = ""
+        get() {
+            val df = SimpleDateFormat("MM/dd E", Locale.JAPAN)
+            return df.format(date)
+        }
+        private set
+}
+
+class DueDateSpinnerDate(override val title: String, override var date: Date) : DueDateSpinnerItem() {
+    override val viewType: DueDateSpinnerAdapter.ViewType
+        get() = DueDateSpinnerAdapter.ViewType.DATE
+}

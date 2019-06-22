@@ -40,12 +40,11 @@ class AddTaskActivity : AppCompatActivity(), AddTaskContract.View {
         spinner.adapter = dueDateSpinnerAdapter
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                if (position == 3)
+                if (dueDateSpinnerItems[position].viewType == DueDateSpinnerAdapter.ViewType.CUSTOM)
                     showDueDatePicker()
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
     }
 
@@ -101,10 +100,14 @@ class AddTaskActivity : AppCompatActivity(), AddTaskContract.View {
         val nextWeek = calender.time
 
         return arrayOf(
-            DueDateSpinnerItem("today", today),
-            DueDateSpinnerItem("tomorrow", tomorrow),
-            DueDateSpinnerItem("Next Week", nextWeek),
-            DueDateSpinnerItem("Custom", src = R.drawable.ic_chevron_right_black_18dp)
+            DueDateSpinnerDate("today", today),
+            DueDateSpinnerDate("tomorrow", tomorrow),
+            DueDateSpinnerDate("Next Week", nextWeek),
+            object : DueDateSpinnerItem() {
+                override val viewType: DueDateSpinnerAdapter.ViewType = DueDateSpinnerAdapter.ViewType.CUSTOM
+                override val title: String = "Custom"
+                override var date: Date = Date()
+            }
         )
     }
 

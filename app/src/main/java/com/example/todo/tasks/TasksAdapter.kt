@@ -12,18 +12,18 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class TasksAdapter(
-    private val items: MutableList<TasksRow>,
+    private val items: MutableList<TaskListRow>,
     private val presenter: TasksContract.Presenter
 ) :
-    RecyclerView.Adapter<TasksAdapter.TaskViewHolder>() {
+    RecyclerView.Adapter<TasksAdapter.ViewHolder>() {
 
     enum class ViewType(val value: Int) { HEADER(0), CONTENT(1) }
 
-    class TaskViewHolder(val taskView: View) : RecyclerView.ViewHolder(taskView)
+    class ViewHolder(val view: View) : RecyclerView.ViewHolder(view)
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
-        val itemView = when (viewType) {
+        val rowView = when (viewType) {
             ViewType.CONTENT.value -> {
                 LayoutInflater.from(parent.context).inflate(R.layout.task_item, parent, false)
             }
@@ -34,29 +34,24 @@ class TasksAdapter(
                 throw RuntimeException()
         }
 
-        return TaskViewHolder(itemView)
+        return ViewHolder(rowView)
     }
 
-    override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val content = items[position].content
         when (getItemViewType(position)) {
             ViewType.CONTENT.value -> {
-                holder.taskView.title_view.text = content
+                holder.view.title_view.text = content
             }
             ViewType.HEADER.value -> {
-                holder.taskView.text.text = content
+                holder.view.text.text = content
             }
         }
     }
 
     override fun getItemCount() = items.size
-    override fun getItemViewType(position: Int) = items[position].viewType.value
 
-    fun swapItem(fromPosition: Int, toPosition: Int) {
-        val tmp = items[fromPosition]
-        items[fromPosition] = items[toPosition]
-        items[toPosition] = tmp
-    }
+    override fun getItemViewType(position: Int) = items[position].viewType.value
 
     fun deleteItem(position: Int) {
         if (items[position].viewType != ViewType.CONTENT) return
@@ -65,13 +60,13 @@ class TasksAdapter(
     }
 }
 
-interface TasksRow {
+interface TaskListRow {
     val viewType: TasksAdapter.ViewType
     val id: Int?
     val content: String
 }
 
-class TasksHeader(date: Date) : TasksRow {
+class TaskListHeader(date: Date) : TaskListRow {
     private var mContent: String
 
     init {
@@ -90,7 +85,7 @@ class TasksHeader(date: Date) : TasksRow {
 
 }
 
-class TasksItem(private val task: Task) : TasksRow {
+class TaskListContent(private val task: Task) : TaskListRow {
 
     override val viewType: TasksAdapter.ViewType
         get() = TasksAdapter.ViewType.CONTENT

@@ -19,7 +19,7 @@ import java.util.*
 class TasksActivity : AppCompatActivity(), TasksContract.View {
     lateinit var mPresenter: TasksContract.Presenter
     private lateinit var tasksAdapter: RecyclerView.Adapter<*>
-    private var tasks = mutableListOf<TasksRow>()
+    private var rows = mutableListOf<TaskListRow>()
 
     @SuppressLint("ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,7 +34,7 @@ class TasksActivity : AppCompatActivity(), TasksContract.View {
     }
 
     private fun initTasksView() {
-        tasksAdapter = TasksAdapter(tasks, mPresenter)
+        tasksAdapter = TasksAdapter(rows, mPresenter)
 
         tasks_view.apply {
             adapter = tasksAdapter
@@ -54,24 +54,24 @@ class TasksActivity : AppCompatActivity(), TasksContract.View {
     }
 
     override fun setTasks(newTasks: List<Task>) {
-        tasks.clear()
-        tasks.addAll(generateTasksRow(newTasks))
+        rows.clear()
+        rows.addAll(generateTaskRows(newTasks))
         tasksAdapter.notifyDataSetChanged()
     }
 
-    private fun generateTasksRow(tasks: List<Task>): MutableList<TasksRow> {
+    private fun generateTaskRows(tasks: List<Task>): MutableList<TaskListRow> {
         if (tasks.isEmpty()) return mutableListOf()
 
-        val t = tasks.sortedWith(compareBy { task -> task.dueDate })
-        val rows = mutableListOf<TasksRow>()
+        val sortedTasks = tasks.sortedWith(compareBy { task -> task.dueDate })
+        val rows = mutableListOf<TaskListRow>()
 
         var previousDueDate = Date(0)
-        t.forEach { task ->
+        sortedTasks.forEach { task ->
             if (task.dueDate != previousDueDate) {
                 previousDueDate = task.dueDate
-                rows.add(TasksHeader(task.dueDate))
+                rows.add(TaskListHeader(task.dueDate))
             }
-            rows.add(TasksItem(task))
+            rows.add(TaskListContent(task))
         }
 
         return rows
@@ -85,17 +85,17 @@ class TasksActivity : AppCompatActivity(), TasksContract.View {
     }
 
     override fun showDeletedTask(taskId: Int) {
-        val deletedIndex = tasks.indexOfFirst { it.id == taskId }
+        val deletedIndex = rows.indexOfFirst { it.id == taskId }
 
-        val hasNoItemInHeader = tasks.size == deletedIndex + 1 ||
-                (tasks[deletedIndex + 1].viewType == ViewType.HEADER && tasks[deletedIndex - 1].viewType == ViewType.HEADER)
+        val hasNoItemInHeader = rows.size == deletedIndex + 1 ||
+                (rows[deletedIndex + 1].viewType == ViewType.HEADER && rows[deletedIndex - 1].viewType == ViewType.HEADER)
 
         if (hasNoItemInHeader) {
-            tasks.removeAt(deletedIndex)
-            tasks.removeAt(deletedIndex - 1)
+            rows.removeAt(deletedIndex)
+            rows.removeAt(deletedIndex - 1)
             tasksAdapter.notifyItemRangeRemoved(deletedIndex - 1, 2)
         } else {
-            tasks.removeAt(deletedIndex)
+            rows.removeAt(deletedIndex)
             tasksAdapter.notifyItemRemoved(deletedIndex)
         }
 

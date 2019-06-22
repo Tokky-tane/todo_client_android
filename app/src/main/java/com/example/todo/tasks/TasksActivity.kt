@@ -14,6 +14,7 @@ import com.example.todo.data.Task
 import com.example.todo.tasks.TasksAdapter.ViewType
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_tasks.*
+import java.util.*
 
 class TasksActivity : AppCompatActivity(), TasksContract.View {
     lateinit var mPresenter: TasksContract.Presenter
@@ -59,16 +60,21 @@ class TasksActivity : AppCompatActivity(), TasksContract.View {
     }
 
     private fun generateTasksRow(tasks: List<Task>): MutableList<TasksRow> {
+        if (tasks.isEmpty()) return mutableListOf()
+
         val t = tasks.sortedWith(compareBy { task -> task.dueDate })
-        val dueDateList = t.map { it.dueDate }.distinct()
-        val rowList = mutableListOf<TasksRow>()
-        dueDateList.forEach { dueDate ->
-            rowList.add(TasksHeader(dueDate))
-            rowList.addAll(
-                t.filter { it.dueDate == dueDate }.map { TasksItem(it) }
-            )
+        val rows = mutableListOf<TasksRow>()
+
+        var previousDueDate = Date(0)
+        t.forEach { task ->
+            if (task.dueDate != previousDueDate) {
+                previousDueDate = task.dueDate
+                rows.add(TasksHeader(task.dueDate))
+            }
+            rows.add(TasksItem(task))
         }
-        return rowList
+
+        return rows
     }
 
     override fun showCantLoadTasks() {

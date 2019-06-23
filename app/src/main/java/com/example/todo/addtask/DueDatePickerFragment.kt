@@ -17,7 +17,10 @@ class DueDatePickerFragment : DialogFragment(), DatePickerDialog.OnDateSetListen
         val month = c.get(Calendar.MONTH)
         val day = c.get(Calendar.DAY_OF_MONTH)
 
-        return DatePickerDialog(context!!, this, year, month, day)
+        val dialog = DatePickerDialog(context!!, this, year, month, day)
+
+        dialog.datePicker.minDate = c.timeInMillis
+        return dialog
     }
 
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {

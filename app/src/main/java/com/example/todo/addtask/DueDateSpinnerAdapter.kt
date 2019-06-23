@@ -29,10 +29,10 @@ class DueDateSpinnerAdapter(context: Context, private val dueDateItems: Array<Du
             view.imageView.setImageResource(R.drawable.ic_chevron_right_black_18dp)
 
             view.date.isVisible = false
-            view.imageView.isVisible = true
         } else {
+            view.imageView.setImageDrawable(null)
+
             view.date.isVisible = true
-            view.imageView.isVisible = false
         }
 
         return view

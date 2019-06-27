@@ -10,7 +10,7 @@ import retrofit2.http.*
 
 interface TaskService {
     @GET("users/{user_id}/tasks")
-    fun getTasks(@Path("user_id") userId: Int): Single<List<Task>>
+    fun getTasks(@Header("Authorization") token: String, @Path("user_id") userId: Int): Single<List<Task>>
 
     @Headers("Content_type: application/json")
     @POST("users/{user_id}/tasks")

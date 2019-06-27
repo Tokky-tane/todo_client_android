@@ -14,7 +14,7 @@ interface TaskService {
 
     @Headers("Content_type: application/json")
     @POST("users/{user_id}/tasks")
-    fun postTask(@Path("user_id") userId: Int, @Body task: Task): Single<Unit>
+    fun postTask(@Header("Authorization") token: String, @Path("user_id") userId: Int, @Body task: Task): Single<Unit>
 
     @DELETE("users/{user_id}/tasks/{task_id}")
     fun deleteTask(@Path("user_id") userId: Int, @Path("task_id") taskId: Int): Single<Unit>

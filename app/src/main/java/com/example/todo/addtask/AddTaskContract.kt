@@ -15,7 +15,7 @@ interface AddTaskContract {
     }
 
     interface Presenter : BasePresenter, Serializable {
-        fun addNewTask(task: Task)
+        fun addNewTask(newTask: Task)
         fun updateTitle(title: String)
         fun updateCustomDate(date: Date)
     }

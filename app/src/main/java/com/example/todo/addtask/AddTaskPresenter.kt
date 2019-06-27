@@ -2,6 +2,7 @@ package com.example.todo.addtask
 
 import com.example.todo.data.RetrofitService
 import com.example.todo.data.Task
+import com.google.firebase.auth.FirebaseAuth
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
@@ -20,21 +21,33 @@ class AddTaskPresenter(private val view: AddTaskContract.View) : AddTaskContract
         compositeDisposable.clear()
     }
 
-    override fun addNewTask(task: Task) {
+    override fun addNewTask(newTask: Task) {
         // TODO : set current userId
-        val disposable = taskService.postTask(1, task)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeBy(
-                onSuccess = {
-                    view.backPreviousView()
-                },
-                onError = {
-                    view.showCantAddTask()
-                }
-            )
+        fun addNewTask(token: String, newTask: Task) {
+            val disposable = taskService.postTask(token, 1, newTask)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy(
+                    onSuccess = {
+                        view.backPreviousView()
+                    },
+                    onError = {
+                        view.showCantAddTask()
+                    }
+                )
+            compositeDisposable.add(disposable)
 
-        compositeDisposable.add(disposable)
+        }
+
+        val user = FirebaseAuth.getInstance().currentUser
+        user!!.getIdToken(true)
+            .addOnCompleteListener { getIdTokenTask ->
+                if (getIdTokenTask.isSuccessful) {
+                    val token = getIdTokenTask.result!!.token!!
+                    addNewTask(token, newTask)
+                } else {
+                }
+            }
     }
 
     override fun updateTitle(title: String) {

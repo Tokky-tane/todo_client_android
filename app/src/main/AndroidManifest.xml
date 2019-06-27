@@ -14,16 +14,18 @@
             android:supportsRtl="true"
             android:theme="@style/Theme.MaterialComponents.Light"
             tools:ignore="GoogleAppIndexingWarning">
-        <activity
-                android:name=".addtask.AddTaskActivity"
-                android:windowSoftInputMode="adjustResize">
-        </activity>
-        <activity android:name=".tasks.TasksActivity">
+        <activity android:name=".auth.AuthActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+        </activity>
+        <activity
+                android:name=".addtask.AddTaskActivity"
+                android:windowSoftInputMode="adjustResize">
+        </activity>
+        <activity android:name=".tasks.TasksActivity">
         </activity>
     </application>
 

@@ -53,18 +53,30 @@ class TasksPresenter(private val view: TasksContract.View) : TasksContract.Prese
     }
 
     override fun deleteTask(taskId: Int) {
-        val disposable = taskService.deleteTask(1, taskId)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeBy(
-                onSuccess = {
-                    view.showDeletedTask(taskId)
-                },
-                onError = {
-                    view.showCantDeleteTask()
-                }
-            )
+        fun deleteTask(token: String, taskId: Int) {
+            val disposable = taskService.deleteTask(token, 1, taskId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy(
+                    onSuccess = {
+                        view.showDeletedTask(taskId)
+                    },
+                    onError = {
+                        view.showCantDeleteTask()
+                    }
+                )
 
-        compositeDisposable.add(disposable)
+            compositeDisposable.add(disposable)
+        }
+
+        val user = FirebaseAuth.getInstance().currentUser
+        user!!.getIdToken(true)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val token = task.result!!.token!!
+                    deleteTask(token, taskId)
+                } else {
+                }
+            }
     }
 }

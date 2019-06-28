@@ -17,7 +17,7 @@ interface TaskService {
     fun postTask(@Header("Authorization") token: String, @Path("user_id") userId: Int, @Body task: Task): Single<Unit>
 
     @DELETE("users/{user_id}/tasks/{task_id}")
-    fun deleteTask(@Path("user_id") userId: Int, @Path("task_id") taskId: Int): Single<Unit>
+    fun deleteTask(@Header("Authorization") token: String, @Path("user_id") userId: Int, @Path("task_id") taskId: Int): Single<Unit>
 }
 
 class RetrofitService {

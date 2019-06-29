@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.todo.R
 import com.example.todo.tasks.TasksActivity
 import com.firebase.ui.auth.AuthUI
-import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
 
 class AuthActivity : AppCompatActivity() {
@@ -17,8 +16,8 @@ class AuthActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val auth = FirebaseAuth.getInstance()
-        if (auth != null) {
+        val user = FirebaseAuth.getInstance().currentUser
+        if (user != null) {
             showTasksView()
             return
         }
@@ -42,7 +41,6 @@ class AuthActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == RC_SIGN_IN) {
-            val response = IdpResponse.fromResultIntent(data)
 
             if (resultCode == Activity.RESULT_OK) {
                 showTasksView()

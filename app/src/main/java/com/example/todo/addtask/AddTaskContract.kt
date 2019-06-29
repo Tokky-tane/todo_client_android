@@ -1,7 +1,6 @@
 package com.example.todo.addtask
 
 import com.example.todo.BasePresenter
-import com.example.todo.data.Task
 import java.io.Serializable
 import java.util.*
 
@@ -15,7 +14,7 @@ interface AddTaskContract {
     }
 
     interface Presenter : BasePresenter, Serializable {
-        fun addNewTask(newTask: Task)
+        fun addNewTask(title: String, dueDate: Date)
         fun updateTitle(title: String)
         fun updateCustomDate(date: Date)
     }

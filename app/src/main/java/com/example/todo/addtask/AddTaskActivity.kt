@@ -6,7 +6,6 @@ import android.widget.AdapterView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import com.example.todo.R
-import com.example.todo.data.Task
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_add_task.*
 import java.util.*
@@ -32,7 +31,7 @@ class AddTaskActivity : AppCompatActivity(), AddTaskContract.View {
             // TODO : set current userId
             val title = task_title.text.toString()
             val dueDate = (spinner.selectedItem as DueDateSpinnerItem).date
-            mPresenter.addNewTask(Task(null, 1, title, dueDate))
+            mPresenter.addNewTask(title, dueDate)
         }
 
         dueDateSpinnerItems = initSpinnerItems()

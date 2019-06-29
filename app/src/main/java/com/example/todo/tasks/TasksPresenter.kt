@@ -21,8 +21,8 @@ class TasksPresenter(private val view: TasksContract.View) : TasksContract.Prese
     }
 
     override fun loadTasks() {
-        fun loadTasks(token: String) {
-            val disposable = taskService.getTasks(token, 1)
+        fun loadTasks(token: String, uid: String) {
+            val disposable = taskService.getTasks(token, uid)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy(
@@ -37,12 +37,12 @@ class TasksPresenter(private val view: TasksContract.View) : TasksContract.Prese
             compositeDisposable.add(disposable)
         }
 
-        val user = FirebaseAuth.getInstance().currentUser
-        user!!.getIdToken(true)
+        val user = FirebaseAuth.getInstance().currentUser!!
+        user.getIdToken(true)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val token = task.result!!.token!!
-                    loadTasks(token)
+                    loadTasks(token, user.uid)
                 } else {
                 }
             }
@@ -53,8 +53,8 @@ class TasksPresenter(private val view: TasksContract.View) : TasksContract.Prese
     }
 
     override fun deleteTask(taskId: Int) {
-        fun deleteTask(token: String, taskId: Int) {
-            val disposable = taskService.deleteTask(token, 1, taskId)
+        fun deleteTask(token: String, uid: String, taskId: Int) {
+            val disposable = taskService.deleteTask(token, uid, taskId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy(
@@ -69,12 +69,12 @@ class TasksPresenter(private val view: TasksContract.View) : TasksContract.Prese
             compositeDisposable.add(disposable)
         }
 
-        val user = FirebaseAuth.getInstance().currentUser
-        user!!.getIdToken(true)
+        val user = FirebaseAuth.getInstance().currentUser!!
+        user.getIdToken(true)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val token = task.result!!.token!!
-                    deleteTask(token, taskId)
+                    deleteTask(token, user.uid, taskId)
                 } else {
                 }
             }

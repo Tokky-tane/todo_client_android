@@ -21,10 +21,10 @@ class AddTaskPresenter(private val view: AddTaskContract.View) : AddTaskContract
         compositeDisposable.clear()
     }
 
-    override fun addNewTask(newTask: Task) {
+    override fun addNewTask(title: String, dueDate: Date) {
         // TODO : set current userId
-        fun addNewTask(token: String, newTask: Task) {
-            val disposable = taskService.postTask(token, 1, newTask)
+        fun addNewTask(token: String, uid: String, newTask: Task) {
+            val disposable = taskService.postTask(token, uid, newTask)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy(
@@ -32,19 +32,20 @@ class AddTaskPresenter(private val view: AddTaskContract.View) : AddTaskContract
                         view.backPreviousView()
                     },
                     onError = {
-                        view.showCantAddTask()
+                        throw it
                     }
                 )
             compositeDisposable.add(disposable)
 
         }
 
-        val user = FirebaseAuth.getInstance().currentUser
-        user!!.getIdToken(true)
+        val user = FirebaseAuth.getInstance().currentUser!!
+        val newTask = Task(null, user.uid, title, dueDate)
+        user.getIdToken(true)
             .addOnCompleteListener { getIdTokenTask ->
                 if (getIdTokenTask.isSuccessful) {
                     val token = getIdTokenTask.result!!.token!!
-                    addNewTask(token, newTask)
+                    addNewTask(token, user.uid, newTask)
                 } else {
                 }
             }

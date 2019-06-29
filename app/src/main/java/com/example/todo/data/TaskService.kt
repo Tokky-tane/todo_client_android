@@ -3,6 +3,7 @@ package com.example.todo.data
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder
 import io.reactivex.Single
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -10,14 +11,14 @@ import retrofit2.http.*
 
 interface TaskService {
     @GET("users/{user_id}/tasks")
-    fun getTasks(@Header("Authorization") token: String, @Path("user_id") userId: Int): Single<List<Task>>
+    fun getTasks(@Header("Authorization") token: String, @Path("user_id") userId: String): Single<List<Task>>
 
     @Headers("Content_type: application/json")
     @POST("users/{user_id}/tasks")
-    fun postTask(@Header("Authorization") token: String, @Path("user_id") userId: Int, @Body task: Task): Single<Unit>
+    fun postTask(@Header("Authorization") token: String, @Path("user_id") userId: String, @Body task: Task): Single<Unit>
 
     @DELETE("users/{user_id}/tasks/{task_id}")
-    fun deleteTask(@Header("Authorization") token: String, @Path("user_id") userId: Int, @Path("task_id") taskId: Int): Single<Unit>
+    fun deleteTask(@Header("Authorization") token: String, @Path("user_id") userId: String, @Path("task_id") taskId: Int): Single<Response<Unit>>
 }
 
 class RetrofitService {

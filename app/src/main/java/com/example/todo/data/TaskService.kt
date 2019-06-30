@@ -31,7 +31,7 @@ class RetrofitService {
     fun getTaskService(): TaskService {
 
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:5000")
+            .baseUrl("https://young-thicket-29507.herokuapp.com")
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()

@@ -7,4 +7,6 @@
     <string name="due_date">Due Date</string>
     <string name="deleted_task">Deleted Task</string>
     <string name="cannot_delete_Task">Can\'t delete task</string>
+    <string name="add_new_task">Add new task</string>
+    <string name="all_tasks">All tasks</string>
 </resources>

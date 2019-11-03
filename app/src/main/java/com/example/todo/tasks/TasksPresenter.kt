@@ -21,8 +21,8 @@ class TasksPresenter(private val view: TasksContract.View) : TasksContract.Prese
     }
 
     override fun loadTasks() {
-        fun loadTasks(token: String, uid: String) {
-            val disposable = taskService.getTasks(token, uid)
+        fun loadTasks(token: String) {
+            val disposable = taskService.getTasks(token)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy(
@@ -42,8 +42,7 @@ class TasksPresenter(private val view: TasksContract.View) : TasksContract.Prese
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val token = task.result!!.token!!
-                    loadTasks(token, user.uid)
-                } else {
+                    loadTasks(token)
                 }
             }
     }
@@ -53,8 +52,8 @@ class TasksPresenter(private val view: TasksContract.View) : TasksContract.Prese
     }
 
     override fun deleteTask(taskId: Int) {
-        fun deleteTask(token: String, uid: String, taskId: Int) {
-            val disposable = taskService.deleteTask(token, uid, taskId)
+        fun deleteTask(token: String, taskId: Int) {
+            val disposable = taskService.deleteTask(token, taskId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy(
@@ -74,8 +73,7 @@ class TasksPresenter(private val view: TasksContract.View) : TasksContract.Prese
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val token = task.result!!.token!!
-                    deleteTask(token, user.uid, taskId)
-                } else {
+                    deleteTask(token, taskId)
                 }
             }
     }

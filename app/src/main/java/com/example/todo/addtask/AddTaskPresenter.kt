@@ -13,18 +13,15 @@ class AddTaskPresenter(private val view: AddTaskContract.View) : AddTaskContract
     private val taskService = RetrofitService().getTaskService()
     private val compositeDisposable = CompositeDisposable()
 
-    override fun subscribe() {
-
-    }
+    override fun subscribe() {}
 
     override fun unSubscribe() {
         compositeDisposable.clear()
     }
 
     override fun addNewTask(title: String, dueDate: Date) {
-        // TODO : set current userId
-        fun addNewTask(token: String, uid: String, newTask: Task) {
-            val disposable = taskService.postTask(token, uid, newTask)
+        fun addNewTask(token: String, newTask: Task) {
+            val disposable = taskService.postTask(token, newTask)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy(
@@ -45,8 +42,7 @@ class AddTaskPresenter(private val view: AddTaskContract.View) : AddTaskContract
             .addOnCompleteListener { getIdTokenTask ->
                 if (getIdTokenTask.isSuccessful) {
                     val token = getIdTokenTask.result!!.token!!
-                    addNewTask(token, user.uid, newTask)
-                } else {
+                    addNewTask(token, newTask)
                 }
             }
     }
